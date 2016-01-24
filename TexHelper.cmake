@@ -21,10 +21,7 @@ macro   (create_tex_output tool output root_name dependency)
 endmacro(create_tex_output)
 
 macro   (create_aux_output tool output root_name dependency)
-    add_custom_command(OUTPUT ${output}
-                       COMMAND ${tool} ${root_name}
-                       COMMAND ${TOUCH} ${output}
-                       DEPENDS ${dependency})
+    wrap_tex_wrapper(${tool} ${output} "${root_name}" "${dependency}")
 endmacro(create_aux_output)
 
 macro   (build_create tool)
@@ -51,3 +48,4 @@ endmacro(build_aux)
 
 build_create("pdflatex")
 build_aux("makeglossaries")
+build_aux("bibtex")

@@ -5,3 +5,4 @@ include(../TexHelper.cmake)
 
 include(multiple-files.cmake)
 include(glossary.cmake)
+include(bibliography.cmake)
