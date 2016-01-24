@@ -1,0 +1,29 @@
+\documentclass{article}
+\usepackage{glossaries}
+\usepackage{splitidx}
+\usepackage{csquotes}
+
+\title{Sources Test}
+\author{Stephen}
+\date{Today}
+
+\makeglossaries
+\makeindex
+
+\begin{document}
+
+\newglossaryentry{feature}{
+  name = {\emph{feature}},
+  description = {A useful bit of functionalty}
+}
+
+This is a document with lots of \glspl{feature}\index{feature@\gls{feature}}.  The previous sentence uses both a glossary entry and an index.  The index entry even uses the glossary to keep formatting.
+
+\LaTeX{} is extremely powerful \cite{mysource}.  As Uncle Ben told his nephew, \enquote{With great power comes great responsibility.}
+
+\bibliographystyle{alpha}
+\bibliography{sources}
+\printglossary
+\printindex[idx][Index]
+
+\end{document}
