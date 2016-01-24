@@ -1,0 +1,22 @@
+\documentclass{article}
+
+\usepackage{glossaries}
+
+\title{Test}
+\author{Stephen}
+\date{Today}
+
+\makeglossaries
+
+\begin{document}
+
+\newglossaryentry{test}{
+  name = test,
+  description = {A method of verifying expected results}
+}
+
+This is a \gls{test}.  A poorly written \gls{test}.
+
+\printglossaries
+
+\end{document}
