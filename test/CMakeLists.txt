@@ -1,3 +1,6 @@
+# Print some helpful debugging messages
+set(TEXHELPER_TRACING ON)
+
 include(../TexHelper.cmake)
 
 # This document is split into multiple files, so make life easier for us and
