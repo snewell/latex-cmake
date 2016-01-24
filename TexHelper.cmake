@@ -46,7 +46,9 @@ macro   (build_aux tool)
     endif(path_${tool})
 endmacro(build_aux)
 
+build_create("lualatex")
 build_create("pdflatex")
-build_aux("makeglossaries")
+
 build_aux("bibtex")
+build_aux("makeglossaries")
 build_aux("splitindex")
