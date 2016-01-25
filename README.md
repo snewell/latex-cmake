@@ -10,10 +10,12 @@ Right now latex-common only works in a Unix environment.  It assumes `/bin/sh`
 and `/bin/touch` exist and work in the normal way.
 
 ## Usage
-Drop `TexHelper.cmake` and `tex-wrapper.sh` in a folder somewhere.  Once the
-files are in place include them in a CMake project like so:
-`include(/path/to/TexHelper.cmake)`
-That's it, you have macros available to build your documents.
+Configure the project using `cmake` and use the `install` target (if you're
+using the `make` geneartor, `make install`)  Once the files are installed
+include them in a CMake project like so: `include(/path/to/TexHelper.cmake)`
+That's it, you have macros available to build your documents.  If you run into
+any errors with the `include` line make sure you've set `CMAKE_MODULE_PATH`
+correctly.
 
 ### Building Documents
 Creating a document has two steps:
