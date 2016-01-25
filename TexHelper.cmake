@@ -1,7 +1,7 @@
 set(SH "/bin/sh")
 set(TOUCH "/bin/touch")
 
-set(build_script "${CMAKE_SOURCE_DIR}/tex-wrapper.sh")
+set(build_script "${CMAKE_CURRENT_LIST_DIR}/tex-wrapper.sh")
 
 function   (trace_message message)
     if   (TEXHELPER_TRACING)
