@@ -8,7 +8,14 @@ set(files "test.tex" "input.tex")
 # depend on the set of files we created earlier.
 create_tex_output_lualatex(test_lualatex "test" "${files}")
 # The previous line doesn't do anything by itself so we'll create a target for
-# CMake.  The name of our target is "test.pdf" and it depends on 
+# CMake.  The name of our target is "test.pdf" and it depends on
 # "test_lualatex" (i.e., the name of the previous task).  Now we can build the
 # document by doing something like "make test.pdf".
 add_custom_target(test.pdf DEPENDS test_lualatex)
+
+create_tex_document(OUTPUT test2.pdf
+                    STEPS lualatex
+                    MAIN_FILE test.tex
+                    DEPENDENCIES input.tex
+                    ALL
+                   )

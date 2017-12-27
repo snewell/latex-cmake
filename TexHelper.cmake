@@ -9,6 +9,56 @@ function   (trace_message message)
     endif(TEXHELPER_TRACING)
 endfunction(trace_message)
 
+include(CMakeParseArguments)
+
+function(create_tex_document)
+    set(options
+            ALL
+       )
+    set(oneValueArgs
+            MAIN_FILE
+            OUTPUT
+            RESULT_TARGET
+       )
+    set(multiValueArgs
+            DEPENDENCIES
+            STEPS
+       )
+    cmake_parse_arguments(CMAKE_HELPER "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    if(CMAKE_HELPER_DEPENDENCIES)
+        set(tex_depends ${CMAKE_HELPER_DEPENDENCIES})
+    else()
+        set(tex_depends ${CMAKE_HELPER_MAIN_FILE})
+    endif()
+
+    set(count 0)
+    foreach(command ${CMAKE_HELPER_STEPS})
+        math(EXPR count "${count} + 1")
+        set(last_target "${CMAKE_HELPER_OUTPUT}_${command}.${count}")
+        set(full_deps ${full_deps} ${last_target})
+        add_custom_command(OUTPUT ${last_target}
+                                COMMAND ${SH} ${build_script} ${CMAKE_CURRENT_SOURCE_DIR} ${command} ${CMAKE_HELPER_MAIN_FILE}
+                                COMMAND ${TOUCH} ${last_target}
+                                DEPENDS ${tex_depends}
+                          )
+    endforeach()
+    if(CMAKE_HELPER_ALL)
+        add_custom_target(${CMAKE_HELPER_OUTPUT}
+                            ALL
+                            DEPENDS ${full_deps}
+                         )
+    else()
+        add_custom_target(${CMAKE_HELPER_OUTPUT}
+                            DEPENDS ${full_deps}
+                         )
+    endif()
+
+    if(CMAKE_HELPER_RESULT_TARGET)
+        set(${CMAKE_HELPER_RESULT_TARGET} ${full_deps} PARENT_SCOPE)
+    endif()
+endfunction()
+
 function(wrap_tex_wrapper tool output target_file dependency)
     add_custom_command(OUTPUT ${output}
                        COMMAND ${SH} ${build_script} ${CMAKE_CURRENT_SOURCE_DIR} ${tool} ${target_file}

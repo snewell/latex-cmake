@@ -13,3 +13,25 @@ create_tex_output_pdflatex(bibtest_pdflatex "sources" "sources.tex")
 create_aux_output_bibtex(bibtest_bib "sources" bibtest_pdflatex)
 create_tex_output_pdflatex(bibtest_final "sources" bibtest_bib)
 add_custom_target(sources.pdf DEPENDS bibtest_final)
+
+
+create_tex_document(OUTPUT sources2.pdf
+                    STEPS pdflatex
+                    MAIN_FILE sources.tex
+                    RESULT_TARGET result_target
+                    ALL
+                   )
+create_tex_document(OUTPUT sources2-bib
+                    STEPS
+                        bibtex
+                    MAIN_FILE sources
+                    DEPENDENCIES ${result_target}
+                    RESULT_TARGET result_target
+                   )
+create_tex_document(OUTPUT sources2.pdf-final
+                    STEPS
+                        pdflatex
+                        pdflatex
+                    MAIN_FILE sources.tex
+                    DEPENDENCIES ${result_target}
+                   )

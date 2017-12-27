@@ -22,3 +22,26 @@ add_custom_target(book.pdf DEPENDS booktest_final)
 # we'll end up with a complete document from a clean build environment.
 create_tex_output_pdflatex(booktest_second "book" booktest_final)
 add_custom_target(book_full DEPENDS booktest_second)
+
+create_tex_document(OUTPUT book2.pdf
+                    STEPS pdflatex
+                    MAIN_FILE book.tex
+                    RESULT_TARGET result_target
+                    ALL
+                   )
+create_tex_document(OUTPUT book2-aux
+                    STEPS
+                        makeglossaries
+                        splitindex
+                        bibtex
+                    MAIN_FILE book
+                    DEPENDENCIES ${result_target}
+                    RESULT_TARGET result_target
+                   )
+create_tex_document(OUTPUT book2.pdf-final
+                    STEPS
+                        pdflatex
+                        pdflatex
+                    MAIN_FILE book.tex
+                    DEPENDENCIES ${result_target}
+                   )
