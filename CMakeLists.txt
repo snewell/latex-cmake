@@ -7,4 +7,5 @@ enable_testing()
 add_subdirectory(test)
 
 install(FILES TexHelper.cmake
-        DESTINATION lib/cmake/TexHelper)
+        DESTINATION ${CMAKE_ROOT}/Modules
+       )
