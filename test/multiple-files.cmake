@@ -13,9 +13,11 @@ create_tex_output_lualatex(test_lualatex "test" "${files}")
 # document by doing something like "make test.pdf".
 add_custom_target(test.pdf DEPENDS test_lualatex)
 
-create_tex_document(OUTPUT test2.pdf
+create_tex_document(TARGET test2.pdf
                     STEPS lualatex
                     MAIN_FILE test.tex
-                    DEPENDENCIES input.tex
+                    DEPENDENCIES
+                        input.tex
+                        test.tex
                     ALL
                    )

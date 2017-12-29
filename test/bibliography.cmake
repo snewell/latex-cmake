@@ -15,20 +15,20 @@ create_tex_output_pdflatex(bibtest_final "sources" bibtest_bib)
 add_custom_target(sources.pdf DEPENDS bibtest_final)
 
 
-create_tex_document(OUTPUT sources2.pdf
+create_tex_document(TARGET sources2.pdf
                     STEPS pdflatex
                     MAIN_FILE sources.tex
                     RESULT_TARGET result_target
                     ALL
                    )
-create_tex_document(OUTPUT sources2-bib
+create_tex_document(TARGET sources2-bib
                     STEPS
                         bibtex
                     MAIN_FILE sources
                     DEPENDENCIES ${result_target}
                     RESULT_TARGET result_target
                    )
-create_tex_document(OUTPUT sources2.pdf-final
+create_tex_document(TARGET sources2.pdf-final
                     STEPS
                         pdflatex
                         pdflatex

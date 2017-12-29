@@ -23,7 +23,7 @@ function(create_tex_document)
        )
     set(oneValueArgs
             MAIN_FILE
-            OUTPUT
+            TARGET
             RESULT_TARGET
        )
     set(multiValueArgs
@@ -41,7 +41,7 @@ function(create_tex_document)
     set(count 0)
     foreach(command ${CMAKE_HELPER_STEPS})
         math(EXPR count "${count} + 1")
-        set(last_target "${CMAKE_HELPER_OUTPUT}_${command}.${count}")
+        set(last_target "${CMAKE_HELPER_TARGET}_${command}.${count}")
         set(full_deps ${full_deps} ${last_target})
         _texhelper_create_command("${last_target}"
                                   "${CMAKE_CURRENT_SOURCE_DIR}" "${command}"
@@ -50,12 +50,12 @@ function(create_tex_document)
                                  )
     endforeach()
     if(CMAKE_HELPER_ALL)
-        add_custom_target(${CMAKE_HELPER_OUTPUT}
+        add_custom_target(${CMAKE_HELPER_TARGET}
                             ALL
                             DEPENDS ${full_deps}
                          )
     else()
-        add_custom_target(${CMAKE_HELPER_OUTPUT}
+        add_custom_target(${CMAKE_HELPER_TARGET}
                             DEPENDS ${full_deps}
                          )
     endif()

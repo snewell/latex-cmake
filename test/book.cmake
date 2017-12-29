@@ -23,13 +23,13 @@ add_custom_target(book.pdf DEPENDS booktest_final)
 create_tex_output_pdflatex(booktest_second "book" booktest_final)
 add_custom_target(book_full DEPENDS booktest_second)
 
-create_tex_document(OUTPUT book2.pdf
+create_tex_document(TARGET book2.pdf
                     STEPS pdflatex
                     MAIN_FILE book.tex
                     RESULT_TARGET result_target
                     ALL
                    )
-create_tex_document(OUTPUT book2-aux
+create_tex_document(TARGET book2-aux
                     STEPS
                         makeglossaries
                         splitindex
@@ -38,9 +38,18 @@ create_tex_document(OUTPUT book2-aux
                     DEPENDENCIES ${result_target}
                     RESULT_TARGET result_target
                    )
-create_tex_document(OUTPUT book2.pdf-final
+
+# We need a final run of pdflatex to put all everything together...
+create_tex_document(TARGET book2.pdf-dummy
                     STEPS
                         pdflatex
+                    MAIN_FILE book.tex
+                    DEPENDENCIES ${result_target}
+                    RESULT_TARGET result_target
+                   )
+# ...but bibtex requires *two* passes to ensure everything is good to go.
+create_tex_document(TARGET book2.pdf-final
+                    STEPS
                         pdflatex
                     MAIN_FILE book.tex
                     DEPENDENCIES ${result_target}
