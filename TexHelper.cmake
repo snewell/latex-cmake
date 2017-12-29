@@ -1,8 +1,3 @@
-set(SH "/bin/sh")
-set(TOUCH "/bin/touch")
-
-set(build_script "${CMAKE_CURRENT_LIST_DIR}/tex-wrapper.sh")
-
 function   (trace_message message)
     if   (TEXHELPER_TRACING)
         message(STATUS "${message}")
@@ -10,6 +5,17 @@ function   (trace_message message)
 endfunction(trace_message)
 
 include(CMakeParseArguments)
+
+macro(_texhelper_create_command output src_dir command main_file depends)
+    add_custom_command(OUTPUT ${output}
+                       COMMAND ${CMAKE_COMMAND} -E
+                            env TEXINPUTS=\"$ENV{TEXINPUTS}:${src_dir}\"
+                            env BIBINPUTS=\"$ENV{BIBINPUTS}:${src_dir}\"
+                            ${command} ${main_file}
+                       COMMAND ${CMAKE_COMMAND} -E touch ${output}
+                       DEPENDS ${depends}
+                      )
+endmacro()
 
 function(create_tex_document)
     set(options
@@ -37,11 +43,11 @@ function(create_tex_document)
         math(EXPR count "${count} + 1")
         set(last_target "${CMAKE_HELPER_OUTPUT}_${command}.${count}")
         set(full_deps ${full_deps} ${last_target})
-        add_custom_command(OUTPUT ${last_target}
-                                COMMAND ${SH} ${build_script} ${CMAKE_CURRENT_SOURCE_DIR} ${command} ${CMAKE_HELPER_MAIN_FILE}
-                                COMMAND ${TOUCH} ${last_target}
-                                DEPENDS ${tex_depends}
-                          )
+        _texhelper_create_command("${last_target}"
+                                  "${CMAKE_CURRENT_SOURCE_DIR}" "${command}"
+                                  "${CMAKE_HELPER_MAIN_FILE}"
+                                  "${CMAKE_HELPER_DEPENDENCIES}"
+                                 )
     endforeach()
     if(CMAKE_HELPER_ALL)
         add_custom_target(${CMAKE_HELPER_OUTPUT}
@@ -60,10 +66,9 @@ function(create_tex_document)
 endfunction()
 
 function(wrap_tex_wrapper tool output target_file dependency)
-    add_custom_command(OUTPUT ${output}
-                       COMMAND ${SH} ${build_script} ${CMAKE_CURRENT_SOURCE_DIR} ${tool} ${target_file}
-                       COMMAND ${TOUCH} ${output}
-                       DEPENDS ${dependency})
+    _texhelper_create_command("${output}" "${CMAKE_CURRENT_SOURCE_DIR}"
+                              "${tool}" "${target_file}" "${dependency}"
+                             )
 endfunction(wrap_tex_wrapper)
 
 function(create_tex_output tool output root_name dependency)
