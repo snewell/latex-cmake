@@ -106,6 +106,7 @@ endmacro(build_aux)
 build_create("lualatex")
 build_create("pdflatex")
 
+build_aux("biber")
 build_aux("bibtex")
 build_aux("makeglossaries")
 build_aux("splitindex")

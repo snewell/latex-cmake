@@ -4,7 +4,7 @@
 create_tex_output_pdflatex(booktest_pdflatex "book" "book.tex")
 create_aux_output_makeglossaries(booktest_gls "book" booktest_pdflatex)
 create_aux_output_splitindex(booktest_index "book" booktest_pdflatex)
-create_aux_output_bibtex(booktest_bib "book" booktest_pdflatex)
+create_aux_output_biber(booktest_bib "book" booktest_pdflatex)
 
 # At this point we can make our target that puts all the work together.  We'll
 # define a variable for our required tasks (each of the above) and create one
@@ -26,6 +26,7 @@ add_custom_target(book_full DEPENDS booktest_second)
 create_tex_document(TARGET book2.pdf
                     STEPS pdflatex
                     MAIN_FILE book.tex
+                    DEPENDENCIES book.tex
                     RESULT_TARGET result_target
                     ALL
                    )
@@ -33,7 +34,7 @@ create_tex_document(TARGET book2-aux
                     STEPS
                         makeglossaries
                         splitindex
-                        bibtex
+                        biber
                     MAIN_FILE book
                     DEPENDENCIES ${result_target}
                     RESULT_TARGET result_target

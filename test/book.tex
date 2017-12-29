@@ -2,6 +2,11 @@
 \usepackage{glossaries}
 \usepackage{splitidx}
 \usepackage{csquotes}
+\usepackage[
+  backend=biber,
+  style=alphabetic,
+  citestyle=alphabetic
+]{biblatex}
 
 \title{Sources Test}
 \author{Stephen}
@@ -9,6 +14,8 @@
 
 \makeglossaries
 \makeindex
+
+\addbibresource{sources.bib}
 
 \begin{document}
 
@@ -21,8 +28,7 @@ This is a document with lots of \glspl{feature}\index{feature@\gls{feature}}.  T
 
 \LaTeX{} is extremely powerful \cite{mysource}.  As Uncle Ben told his nephew, \enquote{With great power comes great responsibility.}
 
-\bibliographystyle{alpha}
-\bibliography{sources}
+\printbibliography
 \printglossary
 \printindex[idx][Index]
 
