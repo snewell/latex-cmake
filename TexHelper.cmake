@@ -6,12 +6,12 @@ endfunction(trace_message)
 
 include(CMakeParseArguments)
 
-macro(_texhelper_create_command output src_dir command main_file depends)
+macro(_texhelper_create_command output src_dir command command_args main_file depends)
     add_custom_command(OUTPUT ${output}
                        COMMAND ${CMAKE_COMMAND} -E
                             env TEXINPUTS=\"$ENV{TEXINPUTS}:${src_dir}\"
                             env BIBINPUTS=\"$ENV{BIBINPUTS}:${src_dir}\"
-                            ${command} ${main_file}
+                            ${command} ${command_args} "${main_file}"
                        COMMAND ${CMAKE_COMMAND} -E touch ${output}
                        DEPENDS ${depends}
                       )
@@ -25,6 +25,7 @@ function(create_tex_document)
             MAIN_FILE
             TARGET
             RESULT_TARGET
+            TOOL_ARGS
        )
     set(multiValueArgs
             DEPENDENCIES
@@ -37,6 +38,11 @@ function(create_tex_document)
     else()
         set(tex_depends ${CMAKE_HELPER_MAIN_FILE})
     endif()
+    if(CMAKE_HELPER_TOOL_ARGS)
+        set(tool_args ${CMAKE_HELPER_TOOL_ARGS})
+    else()
+        set(tool_args ${CMAKE_HELPER_TOOL_ARGS})
+    endif()
 
     set(count 0)
     foreach(command ${CMAKE_HELPER_STEPS})
@@ -45,6 +51,7 @@ function(create_tex_document)
         set(full_deps ${full_deps} ${last_target})
         _texhelper_create_command("${last_target}"
                                   "${CMAKE_CURRENT_SOURCE_DIR}" "${command}"
+                                  "${tool_args}"
                                   "${CMAKE_HELPER_MAIN_FILE}"
                                   "${CMAKE_HELPER_DEPENDENCIES}"
                                  )
@@ -67,7 +74,7 @@ endfunction()
 
 function(wrap_tex_wrapper tool output target_file dependency)
     _texhelper_create_command("${output}" "${CMAKE_CURRENT_SOURCE_DIR}"
-                              "${tool}" "${target_file}" "${dependency}"
+                              "${tool}" "" "${target_file}" "${dependency}"
                              )
 endfunction(wrap_tex_wrapper)
 
